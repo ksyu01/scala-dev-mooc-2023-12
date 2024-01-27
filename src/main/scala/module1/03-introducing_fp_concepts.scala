@@ -228,6 +228,24 @@ object hof{
       case None => None
     }
 
+    /**
+     *
+     * Реализовать метод printIfAny, который будет печатать значение, если оно есть
+     */
+    def printIfAny(): Unit = this match {
+      case Some(v) => println(v)
+      case None => println(None)
+    }
+
+    /**
+     *
+     * Реализовать метод zip, который будет создавать Option от пары значений из 2-х Option
+     * возвратить нужно в tuple
+     */
+    def zip[B](option2: Option[B]): Option[(T, B)] =
+      if (!this.isEmpty && !option2.isEmpty) Some(this.get, option2.get)
+      else None
+
   }
 
   case class Some[V](v: V) extends Option[V]
