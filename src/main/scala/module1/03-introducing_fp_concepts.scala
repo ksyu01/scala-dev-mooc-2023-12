@@ -312,10 +312,14 @@ object hof{
      def cons[TT >: T](elem: TT): List[TT] = new List.::(elem, this)
 
      // Метод mkString возвращает строковое представление списка, с учетом переданного разделителя
-     def mkString(sep: String, realSep: String = ""): String = this match {
-       case List.Nil => ""
-       case List.::(head, tail) => s"$realSep$head${tail.mkString(sep, sep)}"
-     }
+     def mkString(sep: String): String = {
+       // tailSep нужен, чтобы не ставить разделитель перед первым элементом (или последним)
+       def tailRec(list: List[T], result: String, tailSep: String): String = list match {
+         case List.Nil => ""
+         case List.::(head, tail) => s"$tailSep$head${tailRec(tail, result, sep)}"
+       }
+
+       tailRec(this, result="", tailSep="")
 
      // Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
      def reverse: List[T] = this match {
