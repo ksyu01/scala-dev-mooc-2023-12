@@ -320,6 +320,7 @@ object hof{
        }
 
        tailRec(this, result="", tailSep="")
+     }
 
      // Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
      def reverse: List[T] = this match {
