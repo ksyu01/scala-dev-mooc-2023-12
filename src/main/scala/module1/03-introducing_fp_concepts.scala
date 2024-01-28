@@ -309,6 +309,52 @@ object hof{
 
     trait List[+T]{
       def ::[TT >: T](elem: TT): List[TT] = List.::(elem, this)
+     def cons[TT >: T](elem: TT): List[TT] = new List.::(elem, this)
+
+     // Метод mkString возвращает строковое представление списка, с учетом переданного разделителя
+     def mkString(sep: String, realSep: String = ""): String = this match {
+       case List.Nil => ""
+       case List.::(head, tail) => s"$realSep$head${tail.mkString(sep, sep)}"
+     }
+
+     // Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
+     def reverse: List[T] = this match {
+       case List.Nil => List.Nil
+       case List.::(head, tail) =>
+         def tailRec(list: List[T], result: List[T]): List[T] = list match {
+           case List.::(head, tail) => tailRec(tail, result cons head)
+           case List.Nil => result
+         }
+
+         tailRec(this, List.Nil)
+     }
+
+     // Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
+     def map[A](f: T => A): List[A] = this match {
+       case List.Nil => List.Nil
+       case List.::(head, tail) => f(head) :: tail.map(f)
+     }
+
+     // Реализовать метод filter для списка который будет фильтровать список по некому условию
+     def filter(f: T => Boolean): List[T] =
+       this match {
+         case List.::(head, tail) => if (f(head)) head :: tail.filter(f) else tail.filter(f)
+         case List.Nil => List.Nil
+       }
+
+     // Написать функцию incList которая будет принимать список Int и возвращать список, где каждый элемент будет увеличен на 1
+     def incList: List[Int] = this match {
+       case List.Nil => List.Nil
+       case List.::(head: Int, tail) => head + 1 :: tail.incList
+       case _ => throw new Exception("It's not a List[Int]")
+     }
+
+     // Написать функцию shoutString котрая будет принимать список String и возвращать список, где к каждому элементу будет добавлен префикс в виде '!'
+     def shoutString: List[String] = this match {
+       case List.Nil => List.Nil
+       case List.::(head: String, tail) => this.map(x => "!" + x)
+       case _ => throw new Exception("It's not a List[String]")
+     }
     }
 
     object List{
