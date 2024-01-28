@@ -246,6 +246,16 @@ object hof{
       if (!this.isEmpty && !option2.isEmpty) Some(this.get, option2.get)
       else None
 
+    /**
+     *
+     * Реализовать метод filter, который будет возвращать не пустой Option
+     * в случае если исходный не пуст и предикат от значения = true
+     */
+    def filter(f: T => Boolean): Option[T] = this match {
+      case Some(v) => if (f(v)) this else None
+      case None => None
+    }
+
   }
 
   case class Some[V](v: V) extends Option[V]
@@ -298,7 +308,7 @@ object hof{
     */
 
     trait List[+T]{
-      def ::[TT >: T](elem: TT): List[TT] = ???
+      def ::[TT >: T](elem: TT): List[TT] = List.::(elem, this)
     }
 
     object List{
