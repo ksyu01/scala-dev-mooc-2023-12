@@ -3,7 +3,6 @@ package collections
 object task_collections {
 
   def isASCIIString(str: String): Boolean = str.matches("[A-Za-z]+")
-
   /**
    * Реализуйте метод который первый элемент списка не изменяет, а для последующих алгоритм следующий:
    * если isASCIIString is TRUE тогда пусть каждый элемент строки будет в ВЕРХНЕМ регистре
@@ -16,7 +15,11 @@ object task_collections {
    *
    * **/
   def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+    val zippedText = text.zipWithIndex
+    zippedText.collect({
+      case (value, index) if isASCIIString(value) && index != 0 => value.toUpperCase()
+      case (value, _) => value
+    })
   }
 
   /**
