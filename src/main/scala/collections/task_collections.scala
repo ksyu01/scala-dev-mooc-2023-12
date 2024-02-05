@@ -31,8 +31,20 @@ object task_collections {
    *
    * HINT: Для всех возможных комбинаций чисел стоит использовать Map
    * **/
+  val mapNumbers = Map(
+    "0" -> "zero",
+    "1" -> "one",
+    "2" -> "two",
+    "3" -> "three",
+    "4" -> "four",
+    "5" -> "five",
+    "6" -> "six",
+    "7" -> "seven",
+    "8" -> "eight",
+    "9" -> "nine",
+  )
   def numbersToNumericString(text: String): String = {
-    ""
+    text.split(" ").map(x => mapNumbers.getOrElse(x, x)).mkString(" ")
   }
 
   /**
