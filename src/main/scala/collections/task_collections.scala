@@ -59,10 +59,10 @@ object task_collections {
 
   /**
    * Хотим узнать какие машины можно обслужить учитывая этих двух дилеров
-   * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
+   * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальных значений
    **/
-  def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+  def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): List[Auto] = {
+    (dealerOne.toSet & dealerTwo.toSet).toList
   }
 
   /**
@@ -70,7 +70,7 @@ object task_collections {
    * Реализуйте метод который примет две коллекции (два источника)
    * и вернёт уникальный список машин обслуживающихся в первом дилерском центре и не обслуживающимся во втором
    **/
-  def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+  def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): List[Auto] = {
+    dealerOne.toSet.diff(dealerTwo.toSet).toList
   }
 }
