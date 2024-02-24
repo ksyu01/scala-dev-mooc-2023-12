@@ -1,5 +1,7 @@
 package module2
 
+import scala.language.implicitConversions
+
 object higher_kinded_types{
 
   def tuple[A, B](a: List[A], b: List[B]): List[(A, B)] =
@@ -18,6 +20,20 @@ object higher_kinded_types{
   trait Bindable[F[_], A] {
     def map[B](f: A => B): F[B]
     def flatMap[B](f: A => F[B]): F[B]
+  }
+
+
+  def tuplef[F[_], A, B](fa: F[A], fb: F[B])(implicit bindableA: Bindable[F, A], bindableB: Bindable[F, B]): F[(A, B)] =
+    bindableA.flatMap{ a => bindableB.map((a, _)) }
+
+  implicit def optBindableHKT[A](opt: Option[A]): Bindable[Option, A] = new Bindable[Option, A] {
+    override def flatMap[B](f: A => Option[B]): Option[B] = opt.flatMap(f)
+    override def map[B](f: A => B): Option[B] = opt.map(f)
+  }
+
+  implicit def listBindableHKT[A](list: List[A]): Bindable[List, A] = new Bindable[List, A] {
+    override def flatMap[B](f: A => List[B]): List[B] = list.flatMap(f)
+    override def map[B](f: A => B): List[B] = list.map(f)
   }
 
   def tupleBindable[F[_], A, B](fa: Bindable[F, A], fb: Bindable[F, B]): F[(A, B)]  =

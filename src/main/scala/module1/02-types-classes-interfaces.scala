@@ -29,6 +29,33 @@ object type_system {
 //    source.close()
 //  }
 
+  def ensureClose1(source: BufferedSource): List[String] = {
+    try{
+      source.getLines().toList
+    } finally {
+      source.close()
+    }
+  }
+
+  def ensureClose2(source: BufferedSource, f: BufferedSource => List[String]): List[String] = {
+    try{
+      f(source)
+    } finally {
+      source.close()
+    }
+  }
+  val lines2 = ensureClose2(source, s => s.getLines().toList)
+
+  def ensureClose3(source: BufferedSource, f: BufferedSource => List[String]): List[String] = {
+    try{
+      f(source)
+    } finally {
+      source.close()
+    }
+  }
+
+
+
   def ensureClose[S, R](source: S)(release: S => Any)(f: S => R): R = {
     try{
       f(source)
@@ -92,6 +119,14 @@ object type_system {
    * длиной(length) и шириной(width), а также вычислять его периметр и площадь
    *
    */
+
+  class Rectangle(length: Int, width: Int) {
+    def perimeter: Int = length * 2 + width * 2
+    def square: Int = length * width
+  }
+  val myRectange = new Rectangle(3, 2)
+  println(myRectange.perimeter)
+  println(myRectange.square)
 
 
   /**
@@ -159,6 +194,7 @@ object type_system {
 
     def id: Int = ???
   }
+
 
 
   class FooBar{ self : UserService =>
