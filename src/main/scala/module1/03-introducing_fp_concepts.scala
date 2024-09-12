@@ -228,6 +228,34 @@ object hof{
       case None => None
     }
 
+    /**
+     *
+     * Реализовать метод printIfAny, который будет печатать значение, если оно есть
+     */
+    def printIfAny(): Unit = this match {
+      case Some(v) => println(v)
+      case None => println(None)
+    }
+
+    /**
+     *
+     * Реализовать метод zip, который будет создавать Option от пары значений из 2-х Option
+     * возвратить нужно в tuple
+     */
+    def zip[B](option2: Option[B]): Option[(T, B)] =
+      if (!this.isEmpty && !option2.isEmpty) Some(this.get, option2.get)
+      else None
+
+    /**
+     *
+     * Реализовать метод filter, который будет возвращать не пустой Option
+     * в случае если исходный не пуст и предикат от значения = true
+     */
+    def filter(f: T => Boolean): Option[T] = this match {
+      case Some(v) => if (f(v)) this else None
+      case None => None
+    }
+
   }
 
   case class Some[V](v: V) extends Option[V]
@@ -280,7 +308,58 @@ object hof{
     */
 
     trait List[+T]{
-      def ::[TT >: T](elem: TT): List[TT] = ???
+      def ::[TT >: T](elem: TT): List[TT] = List.::(elem, this)
+     def cons[TT >: T](elem: TT): List[TT] = new List.::(elem, this)
+
+     // Метод mkString возвращает строковое представление списка, с учетом переданного разделителя
+     def mkString(sep: String): String = {
+       // tailSep нужен, чтобы не ставить разделитель перед первым элементом (или последним)
+       def tailRec(list: List[T], result: String, tailSep: String): String = list match {
+         case List.Nil => ""
+         case List.::(head, tail) => s"$tailSep$head${tailRec(tail, result, sep)}"
+       }
+
+       tailRec(this, result="", tailSep="")
+     }
+
+     // Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
+     def reverse: List[T] = this match {
+       case List.Nil => List.Nil
+       case List.::(head, tail) =>
+         def tailRec(list: List[T], result: List[T]): List[T] = list match {
+           case List.::(head, tail) => tailRec(tail, result cons head)
+           case List.Nil => result
+         }
+
+         tailRec(this, List.Nil)
+     }
+
+     // Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
+     def map[A](f: T => A): List[A] = this match {
+       case List.Nil => List.Nil
+       case List.::(head, tail) => f(head) :: tail.map(f)
+     }
+
+     // Реализовать метод filter для списка который будет фильтровать список по некому условию
+     def filter(f: T => Boolean): List[T] =
+       this match {
+         case List.::(head, tail) => if (f(head)) head :: tail.filter(f) else tail.filter(f)
+         case List.Nil => List.Nil
+       }
+
+     // Написать функцию incList которая будет принимать список Int и возвращать список, где каждый элемент будет увеличен на 1
+     def incList: List[Int] = this match {
+       case List.Nil => List.Nil
+       case List.::(head: Int, tail) => head + 1 :: tail.incList
+       case _ => throw new Exception("It's not a List[Int]")
+     }
+
+     // Написать функцию shoutString котрая будет принимать список String и возвращать список, где к каждому элементу будет добавлен префикс в виде '!'
+     def shoutString: List[String] = this match {
+       case List.Nil => List.Nil
+       case List.::(head: String, tail) => this.map(x => "!" + x)
+       case _ => throw new Exception("It's not a List[String]")
+     }
     }
 
     object List{
