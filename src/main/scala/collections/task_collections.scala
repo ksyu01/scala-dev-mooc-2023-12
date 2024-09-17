@@ -3,7 +3,6 @@ package collections
 object task_collections {
 
   def isASCIIString(str: String): Boolean = str.matches("[A-Za-z]+")
-
   /**
    * Реализуйте метод который первый элемент списка не изменяет, а для последующих алгоритм следующий:
    * если isASCIIString is TRUE тогда пусть каждый элемент строки будет в ВЕРХНЕМ регистре
@@ -16,7 +15,11 @@ object task_collections {
    *
    * **/
   def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+    val zippedText = text.zipWithIndex
+    zippedText.collect({
+      case (value, index) if isASCIIString(value) && index != 0 => value.toUpperCase()
+      case (value, _) => value
+    })
   }
 
   /**
@@ -28,8 +31,20 @@ object task_collections {
    *
    * HINT: Для всех возможных комбинаций чисел стоит использовать Map
    * **/
+  val mapNumbers = Map(
+    "0" -> "zero",
+    "1" -> "one",
+    "2" -> "two",
+    "3" -> "three",
+    "4" -> "four",
+    "5" -> "five",
+    "6" -> "six",
+    "7" -> "seven",
+    "8" -> "eight",
+    "9" -> "nine",
+  )
   def numbersToNumericString(text: String): String = {
-    ""
+    text.split(" ").map(x => mapNumbers.getOrElse(x, x)).mkString(" ")
   }
 
   /**
@@ -44,10 +59,10 @@ object task_collections {
 
   /**
    * Хотим узнать какие машины можно обслужить учитывая этих двух дилеров
-   * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
+   * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальных значений
    **/
-  def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+  def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): List[Auto] = {
+    (dealerOne.toSet & dealerTwo.toSet).toList
   }
 
   /**
@@ -55,7 +70,7 @@ object task_collections {
    * Реализуйте метод который примет две коллекции (два источника)
    * и вернёт уникальный список машин обслуживающихся в первом дилерском центре и не обслуживающимся во втором
    **/
-  def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+  def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): List[Auto] = {
+    dealerOne.toSet.diff(dealerTwo.toSet).toList
   }
 }
